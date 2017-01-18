@@ -103,10 +103,11 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
     //    s << endl;
   }
   if (meta_class->qualifiedCppName().contains("Ssl")) {
-    s << "#ifndef QT_NO_OPENSSL"  << endl;
+    s << "#ifndef QT_NO_SSL"  << endl;
   }
 
-  if (meta_class->generateShellClass() && !ctors.isEmpty()) {
+  bool generateShell = meta_class->generateShellClass() && !ctors.isEmpty();
+  if (generateShell) {
 
     s << shellClassName(meta_class) << "::~" << shellClassName(meta_class) << "() {" << endl;
     s << "  PythonQtPrivate* priv = PythonQt::priv();" << endl;
@@ -175,7 +176,7 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
         s << "    if (result) { Py_DECREF(result); } " << endl;
         s << "    Py_DECREF(obj);" << endl;
         // ugly hack, we don't support QGraphicsScene* nor QGraphicsItem* QVariants in PythonQt...
-        if (fun->name() == "itemChange" && fun->type()->isVariant()) {
+        if (fun->name() == "itemChange" && fun->type() && fun->type()->isVariant()) {
             s << "    if (change0 == QGraphicsItem::ItemParentChange || change0 == QGraphicsItem::ItemSceneChange) {\n";
             s << "      returnValue = value1;\n";
             s << "    } \n";
@@ -241,6 +242,24 @@ void ShellImplGenerator::write(QTextStream &s, const AbstractMetaClass *meta_cla
       }
       s << ");" << " }" << endl << endl;
     }
+  }
+
+  if (generateShell && meta_class->isQObject()) {
+    s << "const QMetaObject* " << shellClassName(meta_class) << "::metaObject() const {" << endl;
+    s << "  if (QObject::d_ptr->metaObject) {" << endl;
+    s << "    return QObject::d_ptr->dynamicMetaObject();" << endl;
+    s << "  } else if (_wrapper) {" << endl;
+    s << "    return PythonQt::priv()->getDynamicMetaObject(_wrapper, &" << meta_class->qualifiedCppName() << "::staticMetaObject);" << endl;
+    s << "  } else {" << endl;
+    s << "    return &" << meta_class->qualifiedCppName() << "::staticMetaObject;" << endl;
+    s << "  }" << endl;
+    s << "}" << endl;
+
+    s << "int " << shellClassName(meta_class) << "::qt_metacall(QMetaObject::Call call, int id, void** args) {" << endl;
+    s << "  int result = " << meta_class->qualifiedCppName() << "::qt_metacall(call, id, args);" << endl;
+    s << "  return result >= 0 ? PythonQt::priv()->handleMetaCall(this, _wrapper, call, id, args) : result;" << endl;
+    s << "}" << endl;
+
   }
 
   QString wrappedObject = " (*theWrappedObject)";

@@ -43,7 +43,14 @@ Additional configure options are:
 Available branches
 ------------------
 
-This repository contains 6 branches:
+This repository contains 7 branches:
+
+### patched-7
+* Based on [r443](http://sourceforge.net/p/pythonqt/code/443/) with:
+ * partial revert of [r431](http://sourceforge.net/p/pythonqt/code/431/) to re-enable CMake support
+ * all changes from ``patched-6`` cherry-picked.
+* List of bug fixes:
+ * cmake: Fix configure and build error
 
 ### patched-6
 * Based on patched-5 + [r403](http://sourceforge.net/p/pythonqt/code/403/)

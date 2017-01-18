@@ -39,6 +39,9 @@
 **
 ****************************************************************************/
 
+// We need to force the endianess in Qt5
+#define Q_BYTE_ORDER Q_LITTLE_ENDIAN
+
 #define QT_NO_STL
 #include <QtCore/QtCore>
 #include <QtGui/QtGui>
@@ -51,12 +54,16 @@
 
 #if QT_VERSION >= 0x050000
 #include <QtWidgets/QtWidgets>
+#include <QtPrintSupport/QtPrintSupport>
 #endif
 
 #include <QtMultimedia/QtMultimedia>
 
 #if QT_VERSION >= 0x050000
 #include <QtMultimediaWidgets/QtMultimediaWidgets>
+#include <QtQml/QtQml>
+#include <QtQuick/QtQuick>
+#include <QtQuickWidgets/QtQuickWidgets>
 #endif
 
 #ifndef QT_NO_XMLPATTERNS

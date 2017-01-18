@@ -39,6 +39,19 @@ set(minimum_required_qt5_version "5.3.0")
 set(minimum_required_qt4_version "4.6.2")
 set(minimum_required_qt_version ${minimum_required_qt${PythonQt_QT_VERSION}_version})
 
+# Needed to set "Qt5_VERSION"
+if(PythonQt_QT_VERSION VERSION_GREATER "4")
+  find_package(Qt5 COMPONENTS Core QUIET)
+endif()
+
+# Qt components
+set(qt5libs Core Widgets Network OpenGL Sql Svg UiTools Xml XmlPatterns)
+if(PythonQt_QT_VERSION VERSION_GREATER "4" AND "${Qt5_VERSION}" VERSION_LESS "5.6.0")
+  list(APPEND qt5libs WebKitWidgets)
+endif()
+set(qt4libs core gui network opengl sql svg uitools webkit xml xmlpatterns)
+set(qtlibs ${qt${PythonQt_QT_VERSION}libs})
+
 # Qt components
 set(qt5libs Core Widgets Network OpenGL Sql Svg UiTools WebKitWidgets Xml XmlPatterns)
 set(qt4libs core gui network opengl sql svg uitools webkit xml xmlpatterns)
@@ -88,7 +101,7 @@ set(qt4_wrapped_libs ${qt4libs})
 set(qt5_wrapped_libs ${qt4libs})
 set(qt_wrapped_libs ${qt${PythonQt_QT_VERSION}_wrapped_libs})
 
-set(qt5_wrapped_lib_depends_gui Multimedia)
+set(qt5_wrapped_lib_depends_gui Multimedia PrintSupport)
 
 set(qtlib_to_wraplib_Widgets gui)
 set(qtlib_to_wraplib_WebKitWidgets webkit)
@@ -158,6 +171,9 @@ if(PythonQt_QT_VERSION VERSION_GREATER "4")
     list(APPEND QT_LIBRARIES ${Qt5${qtlib}_LIBRARIES})
   endforeach()
 
+  # Required for use of "QtCore/private/qmetaobjectbuilder_p.h" in "PythonQt.cpp"
+  include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
+
   set(QT_VERSION_MAJOR ${Qt5Core_VERSION_MAJOR})
   set(QT_VERSION_MINOR ${Qt5Core_VERSION_MINOR})
 
@@ -217,7 +233,9 @@ set(generated_cpp_suffix_51 _50)
 set(generated_cpp_suffix "_${QT_VERSION_MAJOR}${QT_VERSION_MINOR}")
 if(DEFINED generated_cpp_suffix_${QT_VERSION_MAJOR}${QT_VERSION_MINOR})
   set(generated_cpp_suffix "${generated_cpp_suffix_${QT_VERSION_MAJOR}${QT_VERSION_MINOR}}")
-elseif(${QT_VERSION_MAJOR}.${QT_VERSION_MINOR} VERSION_GREATER "5.4")
+elseif("${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}" VERSION_GREATER "5.5")
+  set(generated_cpp_suffix "_56")
+elseif("${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}" VERSION_GREATER "5.3")
   set(generated_cpp_suffix "_54")
 endif()
 
@@ -235,10 +253,12 @@ set(sources
     src/PythonQtMethodInfo.cpp
     src/PythonQtMisc.cpp
     src/PythonQtObjectPtr.cpp
+    src/PythonQtProperty.cpp
     src/PythonQtQFileImporter.cpp
     src/PythonQtSignalReceiver.cpp
     src/PythonQtSlot.cpp
     src/PythonQtSignal.cpp
+    src/PythonQtSlotDecorator.cpp
     src/PythonQtStdDecorators.cpp
     src/PythonQtStdIn.cpp
     src/PythonQtStdOut.cpp
@@ -269,10 +289,12 @@ set(headers
     src/PythonQtMethodInfo.h
     src/PythonQtMisc.h
     src/PythonQtObjectPtr.h
+    src/PythonQtProperty.h
     src/PythonQtQFileImporter.h
     src/PythonQtSignalReceiver.h
     src/PythonQtSlot.h
     src/PythonQtSignal.h
+    src/PythonQtSlotDecorator.h
     src/PythonQtStdDecorators.h
     src/PythonQtStdIn.h
     src/PythonQtStdOut.h
@@ -280,6 +302,7 @@ set(headers
     src/PythonQtUtils.h
     src/PythonQtVariants.h
     src/PythonQtPythonInclude.h
+
     generated_cpp${generated_cpp_suffix}/PythonQt_QtBindings.h
 )
 
