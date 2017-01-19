@@ -35,7 +35,7 @@ else()
 endif()
 
 # Requirements
-set(minimum_required_qt5_version "5.3.0")
+set(minimum_required_qt5_version "5.2.0")
 set(minimum_required_qt4_version "4.6.2")
 set(minimum_required_qt_version ${minimum_required_qt${PythonQt_QT_VERSION}_version})
 
