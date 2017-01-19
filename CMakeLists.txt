@@ -46,14 +46,11 @@ endif()
 
 # Qt components
 set(qt5libs Core Widgets Network OpenGL Sql Svg UiTools Xml XmlPatterns)
+message(STATUS "${Qt5_VERSION}")
 if(PythonQt_QT_VERSION VERSION_GREATER "4" AND "${Qt5_VERSION}" VERSION_LESS "5.6.0" AND "${Qt5_VERSION}" VERSION_GREATER "5.2.9")
   list(APPEND qt5libs WebKitWidgets)
 endif()
-set(qt4libs core gui network opengl sql svg uitools webkit xml xmlpatterns)
-set(qtlibs ${qt${PythonQt_QT_VERSION}libs})
 
-# Qt components
-set(qt5libs Core Widgets Network OpenGL Sql Svg UiTools WebKitWidgets Xml XmlPatterns)
 set(qt4libs core gui network opengl sql svg uitools webkit xml xmlpatterns)
 set(qtlibs ${qt${PythonQt_QT_VERSION}libs})
   
