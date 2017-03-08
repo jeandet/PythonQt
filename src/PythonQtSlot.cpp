@@ -84,6 +84,7 @@ bool PythonQtCallSlot(PythonQtClassInfo* classInfo, QObject* objectToCall, PyObj
   argList[0] = NULL;
   
   bool ok = true;
+  bool skipFirst = false;
   PythonQtPassThisOwnershipType passThisOwnership = IgnoreOwnership;
 
   int instanceDecoOffset = 0;
@@ -91,6 +92,7 @@ bool PythonQtCallSlot(PythonQtClassInfo* classInfo, QObject* objectToCall, PyObj
   // would go away if it is moved into the if scope
   void* arg1 = NULL;
   if (info->isInstanceDecorator()) {
+    skipFirst = true;
     instanceDecoOffset = 1;
 
     // for decorators on CPP objects, we take the cpp ptr, for QObjects we take the QObject pointer
@@ -325,8 +327,14 @@ PyObject *PythonQtMemberFunction_Call(PythonQtSlotInfo* info, PyObject* m_self, 
   return NULL;
 }
 
-PyObject *PythonQtSlotFunction_CallImpl(PythonQtClassInfo* classInfo, QObject* objectToCall, PythonQtSlotInfo* info, PyObject *args, PyObject * /*kw*/, void* firstArg, void** directReturnValuePointer,  PythonQtPassThisOwnershipType* passThisOwnershipToCPP)
+PyObject *PythonQtSlotFunction_CallImpl(PythonQtClassInfo* classInfo, QObject* objectToCall, PythonQtSlotInfo* info, PyObject *args, PyObject * kw, void* firstArg, void** directReturnValuePointer,  PythonQtPassThisOwnershipType* passThisOwnershipToCPP)
 {
+  if (kw != NULL && PyDict_Check(kw) && (PyDict_Size(kw) > 0)) {
+    QString e = QString("Calling C++ functions with Python keywords is not supported! Function: ") + info->fullSignature(true) + " Keywords: " + PythonQtConv::PyObjGetString(kw);
+    PyErr_SetString(PyExc_ValueError, e.toLatin1().data());
+    return NULL;
+  }
+
   int argc = args?PyTuple_Size(args):0;
   if (passThisOwnershipToCPP) {
     *passThisOwnershipToCPP = IgnoreOwnership;

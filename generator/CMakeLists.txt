@@ -5,58 +5,112 @@ project(PythonQtGenerator)
 #-----------------------------------------------------------------------------
 
 set(sources
-  parser/ast.cpp
-  parser/binder.cpp
-  parser/class_compiler.cpp
-  parser/codemodel.cpp
-  parser/codemodel_finder.cpp
-  parser/compiler_utils.cpp
-  parser/control.cpp
-  parser/declarator_compiler.cpp
-  parser/default_visitor.cpp
-  parser/dumptree.cpp
-  parser/lexer.cpp
-  parser/list.cpp
-  parser/name_compiler.cpp
-  parser/parser.cpp
-  parser/smallobject.cpp
-  parser/tokens.cpp
-  parser/type_compiler.cpp
-  parser/visitor.cpp
-  
-  abstractmetabuilder.cpp
-  abstractmetalang.cpp
-  asttoxml.cpp
-  customtypes.cpp
-  fileout.cpp
-  generator.cpp
-  generatorset.cpp
-  generatorsetqtscript.cpp
-  main.cpp
-  metajava.cpp
-  metaqtscriptbuilder.cpp
-  metaqtscript.cpp
-  prigenerator.cpp
-  reporthandler.cpp
-  setupgenerator.cpp
-  shellgenerator.cpp
-  shellheadergenerator.cpp
-  shellimplgenerator.cpp
-  typeparser.cpp
-  typesystem.cpp
+    generatorsetqtscript.h
+    metaqtscriptbuilder.h
+    metaqtscript.h
+    shellgenerator.h
+    shellimplgenerator.h
+    shellheadergenerator.h
+    setupgenerator.h
 
-  fileout.h
-  generator.h
-  generatorset.h
-  generatorsetqtscript.h
-  prigenerator.h
-  setupgenerator.h
-  shellgenerator.h
-  shellheadergenerator.h
-  shellimplgenerator.h
+    generatorsetqtscript.cpp
+    metaqtscriptbuilder.cpp
+    metaqtscript.cpp
+    shellgenerator.cpp
+    shellimplgenerator.cpp
+    shellheadergenerator.cpp
+    setupgenerator.cpp
+
+    generator.h
+    main.h
+    reporthandler.h
+    typeparser.h
+    typesystem.h
+    asttoxml.h
+    fileout.h
+    generatorset.h
+    metajava.h
+    customtypes.h
+    abstractmetabuilder.h
+    abstractmetalang.h
+    prigenerator.h
+
+    generator.cpp
+    main.cpp
+    reporthandler.cpp
+    typeparser.cpp
+    typesystem.cpp
+    asttoxml.cpp
+    fileout.cpp
+    generatorset.cpp
+    metajava.cpp
+    customtypes.cpp
+    abstractmetabuilder.cpp
+    abstractmetalang.cpp
+    prigenerator.cpp
+
+    parser/ast.h
+    parser/lexer.h
+    parser/list.h
+    parser/parser.h
+    parser/rxx_allocator.h
+    parser/rpp-allocator.h
+    parser/smallobject.h
+    parser/tokens.h
+    parser/symbol.h
+    parser/control.h
+    parser/visitor.h
+    parser/default_visitor.h
+    parser/dumptree.h
+    parser/binder.h
+    parser/codemodel.h
+    parser/codemodel_pointer.h
+    parser/codemodel_fwd.h
+    parser/type_compiler.h
+    parser/name_compiler.h
+    parser/declarator_compiler.h
+    parser/class_compiler.h
+    parser/codemodel_finder.h
+    parser/compiler_utils.h
+    parser/ast.cpp
+    parser/lexer.cpp
+    parser/list.cpp
+    parser/parser.cpp
+    parser/smallobject.cpp
+    parser/control.cpp
+    parser/visitor.cpp
+    parser/default_visitor.cpp
+    parser/dumptree.cpp
+    parser/tokens.cpp
+    parser/binder.cpp
+    parser/codemodel.cpp
+    parser/type_compiler.cpp
+    parser/name_compiler.cpp
+    parser/declarator_compiler.cpp
+    parser/class_compiler.cpp
+    parser/codemodel_finder.cpp
+    parser/compiler_utils.cpp
+
+    parser/rpp/preprocessor.cpp
+    parser/rpp/pp-cctype.h
+    parser/rpp/pp-engine-bits.h
+    parser/rpp/pp-engine.h
+    parser/rpp/pp-environment.h
+    parser/rpp/pp-fwd.h
+    parser/rpp/pp-internal.h
+    parser/rpp/pp-iterator.h
+    parser/rpp/pp-macro-expander.h
+    parser/rpp/pp-macro.h
+    parser/rpp/pp-scanner.h
+    parser/rpp/pp-string.h
+    parser/rpp/pp-symbol.h
+    parser/rpp/pp.h
+    parser/rpp/preprocessor.h
 
   generator.qrc
   )
+
+add_definitions(-DRXX_ALLOCATOR_INIT_0)
 
 #-----------------------------------------------------------------------------
 # Copy file expected by the generator and specify install rules

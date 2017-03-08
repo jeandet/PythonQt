@@ -1,3 +1,5 @@
+#pragma once
+
 /*
 *
 *  Copyright (C) 2010 MeVis Medical Solutions AG All Rights Reserved.
@@ -30,47 +32,19 @@
 *
 */
 
-#include "PythonQt_QtAll.h"
+#include "PythonQtSystem.h"
+#include "PythonQtPythonInclude.h"
+#include <QByteArray>
+#include <QList>
 
-#include "PythonQt.h"
+#include <structmember.h>
 
-void PythonQt_init_QtGui(PyObject*);
-void PythonQt_init_QtSvg(PyObject*);
-void PythonQt_init_QtSql(PyObject*);
-void PythonQt_init_QtNetwork(PyObject*);
-void PythonQt_init_QtCore(PyObject*);
-void PythonQt_init_QtWebKit(PyObject*);
-void PythonQt_init_QtOpenGL(PyObject*);
-void PythonQt_init_QtXml(PyObject*);
-void PythonQt_init_QtQml(PyObject*);
-void PythonQt_init_QtQuick(PyObject*);
-void PythonQt_init_QtUiTools(PyObject*);
+extern PYTHONQT_EXPORT PyTypeObject PythonQtSlotDecorator_Type;
 
-#if QT_VERSION >= 0x050000
-void PythonQt_init_QtXmlPatterns(PyObject*);
-void PythonQt_init_QtMultimedia(PyObject*);
-#endif
+#define PythonQtSlotDecorator_Check(op) (Py_TYPE(op) == &PythonQtSlotDecorator_Type)
 
-namespace PythonQt_QtAll
-{
-  PYTHONQT_QTALL_EXPORT void init() {
-    PythonQt_init_QtCore(0);
-    PythonQt_init_QtNetwork(0);
-    PythonQt_init_QtGui(0);
-    PythonQt_init_QtXml(0);
-    PythonQt_init_QtSvg(0);
-    PythonQt_init_QtSql(0);
-    PythonQt_init_QtWebKit(0);
-    PythonQt_init_QtOpenGL(0);
-    PythonQt_init_QtUiTools(0);
-    PythonQt_init_QtQml(0);
-    PythonQt_init_QtQuick(0);
-    PythonQt_init_QtUiTools(0);
-#if QT_VERSION >= 0x050000
-    PythonQt_init_QtXmlPatterns(0);
-    PythonQt_init_QtMultimedia(0);
-#endif
-  };
-};
-
-
+typedef struct {
+  PyObject_HEAD
+  QByteArray* args;
+  QByteArray* returnType;
+} PythonQtSlotDecorator;

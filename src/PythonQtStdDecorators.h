@@ -64,15 +64,15 @@ class PYTHONQT_EXPORT PythonQtStdDecorators : public QObject
   Q_OBJECT
 
 public Q_SLOTS:
-  bool connect(QObject* sender, const QByteArray& signal, PyObject* callable);
-  bool connect(QObject* sender, const QByteArray& signal, QObject* receiver, const QByteArray& slot,  Qt::ConnectionType type = Qt::AutoConnection);
-  bool connect(QObject* receiver, QObject* sender, const QByteArray& signal, const QByteArray& slot,  Qt::ConnectionType type = Qt::AutoConnection) { return connect(sender, signal, receiver, slot, type); }
-  bool static_QObject_connect(QObject* sender, const QByteArray& signal, PyObject* callable) { return connect(sender, signal, callable); }
-  bool static_QObject_connect(QObject* sender, const QByteArray& signal, QObject* receiver, const QByteArray& slot,  Qt::ConnectionType type = Qt::AutoConnection)  { return connect(sender, signal, receiver, slot, type); }
-  bool disconnect(QObject* sender, const QByteArray& signal, PyObject* callable = NULL);
-  bool disconnect(QObject* sender, const QByteArray& signal, QObject* receiver, const QByteArray& slot);
-  bool static_QObject_disconnect(QObject* sender, const QByteArray& signal, PyObject* callable = NULL) { return disconnect(sender, signal, callable); }
-  bool static_QObject_disconnect(QObject* sender, const QByteArray& signal, QObject* receiver, const QByteArray& slot) { return connect(sender, signal, receiver, slot); }
+  bool connect(QObject* sender, const QString& signal, PyObject* callable);
+  bool connect(QObject* sender, const QString& signal, QObject* receiver, const QString& slot,  Qt::ConnectionType type = Qt::AutoConnection);
+  bool connect(QObject* receiver, QObject* sender, const QString& signal, const QString& slot,  Qt::ConnectionType type = Qt::AutoConnection) { return connect(sender, signal, receiver, slot, type); }
+  bool static_QObject_connect(QObject* sender, const QString& signal, PyObject* callable) { return connect(sender, signal, callable); }
+  bool static_QObject_connect(QObject* sender, const QString& signal, QObject* receiver, const QString& slot,  Qt::ConnectionType type = Qt::AutoConnection)  { return connect(sender, signal, receiver, slot, type); }
+  bool disconnect(QObject* sender, const QString& signal, PyObject* callable = NULL);
+  bool disconnect(QObject* sender, const QString& signal, QObject* receiver, const QString& slot);
+  bool static_QObject_disconnect(QObject* sender, const QString& signal, PyObject* callable = NULL) { return disconnect(sender, signal, callable); }
+  bool static_QObject_disconnect(QObject* sender, const QString& signal, QObject* receiver, const QString& slot) { return connect(sender, signal, receiver, slot); }
 
   const QMetaObject* metaObject( QObject* obj );
 
@@ -106,10 +106,10 @@ public Q_SLOTS:
   int static_Qt_qrand() { return qrand(); }
   void static_Qt_qsrand(uint a) { qsrand(a); }
 
-  QString tr(QObject* obj, const QByteArray& text, const QByteArray& ambig = QByteArray(), int n = -1);
+  QString tr(QObject* obj, const QString& text, const QString& ambig = QString(), int n = -1);
 
-  QByteArray static_Qt_SIGNAL(const QByteArray& s) { return QByteArray("2") + s; }
-  QByteArray static_Qt_SLOT(const QByteArray& s) { return QByteArray("1") + s; }
+  QString static_Qt_SIGNAL(const QString& s) { return QString("2") + s; }
+  QString static_Qt_SLOT(const QString& s) { return QString("1") + s; }
 
   void static_QTimer_singleShot(int msec, PyObject* callable);
 

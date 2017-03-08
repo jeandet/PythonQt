@@ -526,7 +526,7 @@ public:
   //@{
 
   //! get access to internal data (should not be used on the public API, but is used by some C functions)
-  static PythonQtPrivate* priv() { return _self ? _self->_p : NULL; }
+  static PythonQtPrivate* priv() { return _self->_p; }
 
   //! clear all NotFound entries on all class infos, to ensure that
   //! newly loaded wrappers can add methods even when the object was wrapped by PythonQt before the wrapper was loaded
@@ -738,6 +738,17 @@ public:
 
   //! returns true if the object is a method descriptor (same as inspect.ismethoddescriptor() in inspect.py)
   bool isMethodDescriptor(PyObject* object) const;
+
+  //! get the dynamic meta object for the given wrapper. It will contain the signals/slots that have been added in Python
+  const QMetaObject* getDynamicMetaObject(PythonQtInstanceWrapper* wrapper, const QMetaObject* prototypeMetaObject);
+
+  void buildDynamicMetaObject(PythonQtClassWrapper* type, const QMetaObject* prototypeMetaObject);
+
+  //! redirected from shell classes, tries to call the given meta call on the Python wrapper. 
+  int handleMetaCall(QObject* object, PythonQtInstanceWrapper* wrapper, QMetaObject::Call call, int id, void** args);
+
+  //! calls the given method on Python function with same name.
+  void callMethodInPython(QMetaMethod &method, PythonQtInstanceWrapper* wrapper, void** args);
 
 private:
   //! Setup the shared library suffixes by getting them from the "imp" module.

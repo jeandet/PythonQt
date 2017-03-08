@@ -15,4 +15,3 @@ set(CMAKE_AUTORCC ON)
 
 add_subdirectory(generator)
 add_subdirectory(src)
-

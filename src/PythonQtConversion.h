@@ -47,7 +47,6 @@
 #include "PythonQtClassInfo.h"
 #include "PythonQtMethodInfo.h"
 
-#include <QWidget>
 #include <QList>
 #include <vector>
 
@@ -180,6 +179,12 @@ public:
   static PyObject* convertFromQListOfPythonQtObjectPtr(const void* /* QList<PythonQtObjectPtr>* */ inObject, int /*metaTypeId*/);
   static PyObject* convertFromStringRef(const void* inObject, int /*metaTypeId*/);
 
+  //! Returns the name of the equivalent CPP type (for signals and slots)
+  static QByteArray getCPPTypeName(PyObject* type);
+
+  //! Returns if the given object is a string (or unicode string)
+  static bool isStringType(PyTypeObject* type);
+
 public:
 
   static PythonQtValueStorage<qint64, 128>  global_valueStorage;
@@ -261,7 +266,7 @@ template<class ListType, class T>
 PyObject* PythonQtConvertListOfKnownClassToPythonList(const void* /*QList<T>* */ inList, int metaTypeId)
 {
   ListType* list = (ListType*)inList;
-  static PythonQtClassInfo* innerType = PythonQt::priv()->getClassInfo(PythonQtMethodInfo::getInnerTemplateTypeName(QByteArray(QMetaType::typeName(metaTypeId))));
+  static PythonQtClassInfo* innerType = PythonQt::priv()->getClassInfo(PythonQtMethodInfo::getInnerListTypeName(QByteArray(QMetaType::typeName(metaTypeId))));
   if (innerType == NULL) {
     std::cerr << "PythonQtConvertListOfKnownClassToPythonList: unknown inner type " << innerType->className().constData() << std::endl;
   }
@@ -281,7 +286,7 @@ template<class ListType, class T>
 bool PythonQtConvertPythonListToListOfKnownClass(PyObject* obj, void* /*QList<T>* */ outList, int metaTypeId, bool /*strict*/)
 {
   ListType* list = (ListType*)outList;
-  static PythonQtClassInfo* innerType = PythonQt::priv()->getClassInfo(PythonQtMethodInfo::getInnerTemplateTypeName(QByteArray(QMetaType::typeName(metaTypeId))));
+  static PythonQtClassInfo* innerType = PythonQt::priv()->getClassInfo(PythonQtMethodInfo::getInnerListTypeName(QByteArray(QMetaType::typeName(metaTypeId))));
   if (innerType == NULL) {
     std::cerr << "PythonQtConvertListOfKnownClassToPythonList: unknown inner type " << innerType->className().constData() << std::endl;
   }
