@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 project (PythonQt)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -59,7 +59,6 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets ${PYTHON_LIBRARIES})
 
 

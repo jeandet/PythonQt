@@ -46,7 +46,14 @@ function (build_external_project target src bin) #FOLLOWING ARGUMENTS are the CM
         ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/*.cpp
         ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/*.h
     )
-    set(generated_qt_core_builtin_sources ${generated_qt_core_builtin_sources_glob} PARENT_SCOPE)
+
+    foreach(module core gui multimedia network opengl sql svg uitools webkit xml xmlpatterns)
+        file(GLOB generated_qt_${module}_sources_glob
+            ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_${module}/*.h
+            ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_${module}/*.cpp
+        )
+       set(generated_qt_${module}_sources ${generated_qt_${module}_sources_glob} CACHE INTERNAL "")
+    endforeach()
+
+    set(generated_qt_core_builtin_sources ${generated_qt_core_builtin_sources_glob} CACHE INTERNAL "")
 endfunction()
-
-

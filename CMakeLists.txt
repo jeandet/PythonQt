@@ -10,7 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
       "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-find_package(Qt5 COMPONENTS Core Widgets Xml Test REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets Xml Network Multimedia OpenGL Sql Svg UiTools WebKit Xml XmlPatterns Test REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -20,7 +20,9 @@ build_external_project(PythonQt_generator
     ${CMAKE_BINARY_DIR}/generator
     )
 
+include_directories(src)
 
 add_subdirectory(src)
+add_subdirectory(extensions)
 
 
