@@ -3,20 +3,6 @@ project (PythonQt)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_custom_command (
-  OUTPUT   ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin_init.cpp
-  ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin0.h
-  ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin0.cpp
-
-  ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin0.h
-  ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin0.cpp
-  ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin_init.cpp
-  COMMAND PythonQtGenerator  --include-paths=${QT_INSTALL_HEADERS} --output-directory=generated_cpp
-  DEPENDS PythonQtGenerator
-  #WORKING_DIRECTORY $<TARGET_FILE_DIR:PythonQtGenerator>
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/generator/
-  )
-
 
 set(SOURCES
       PythonQt.h
@@ -63,14 +49,7 @@ set(SOURCES
       PythonQtBoolResult.cpp
       gui/PythonQtScriptingConsole.cpp
 
-      ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin_init.cpp
-      ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin0.h
-      ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin0.cpp
-
-      ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin0.h
-      ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin0.cpp
-      ${CMAKE_BINARY_DIR}/generated_cpp/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin_init.cpp
-
+      ${generated_qt_core_builtin_sources}
     )
 
 find_package(PythonInterp 3 REQUIRED)
@@ -78,10 +57,10 @@ find_package(PythonLibs 3 REQUIRED)
 
 include_directories(${PYTHON_INCLUDE_DIRS})
 
+
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets ${PYTHON_LIBRARIES})
-
 
 
 foreach(module Core Gui PrintSupport)

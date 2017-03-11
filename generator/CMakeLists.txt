@@ -1,8 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+      "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
 #-----------------------------------------------------------------------------
 project(PythonQtGenerator)
 #-----------------------------------------------------------------------------
+
+find_package(Qt5 COMPONENTS Core Widgets Xml Test REQUIRED)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
 set(sources
     generatorsetqtscript.h
@@ -107,7 +117,7 @@ set(sources
     parser/rpp/pp.h
     parser/rpp/preprocessor.h
 
-  generator.qrc
+    generator.qrc
   )
 
 add_definitions(-DRXX_ALLOCATOR_INIT_0)
@@ -134,9 +144,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/parser/rpp
   )
 
-add_executable(${PROJECT_NAME}
-  ${sources}
-)
+add_executable(${PROJECT_NAME}  ${sources})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Xml)
 

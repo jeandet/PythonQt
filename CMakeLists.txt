@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.8)
 
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(generated_cpp)
 
 project(PythonQt)
 
@@ -13,12 +15,12 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-execute_process(COMMAND ${QT_QMAKE_EXECUTABLE} -query QT_INSTALL_HEADERS OUTPUT_VARIABLE QT_INSTALL_HEADERS)
+build_external_project(PythonQt_generator
+    ${CMAKE_CURRENT_LIST_DIR}/generator
+    ${CMAKE_BINARY_DIR}/generator
+    )
 
-add_subdirectory(generator)
 
 add_subdirectory(src)
 
-get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-message(${QT_QMAKE_EXECUTABLE})
-message(${QT_INSTALL_HEADERS})
+
