@@ -72,7 +72,11 @@ endif()
 #-----------------------------------------------------------------------------
 # Python libraries
 
-find_package(PythonLibs REQUIRED)
+IF(APPLE)
+#    set(PYVER 2.7)
+ENDIF()
+
+find_package(PythonLibs ${PYVER} REQUIRED)
 include_directories("${PYTHON_INCLUDE_DIR}")
 add_definitions(
   -DPYTHONQT_USE_RELEASE_PYTHON_FALLBACK
