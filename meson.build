@@ -78,10 +78,12 @@ srcs = [
 
 pyqt = library('pythonqt',[srcs, moc_files],
 	include_directories:  inc, dependencies : [qt5_dep, python])
-pythonqt = declare_dependency(link_with:pyqt, dependencies:[python], include_directories:  inc)
+
+pythonqt_dep = declare_dependency(link_with:pyqt, dependencies:[python], include_directories:  inc)
 
 lib_all_srcs = [
-'generated_cpp_58/com_trolltech_qt_svg/com_trolltech_qt_svg_init.cpp',
+ 'extensions/PythonQt_QtAll/PythonQt_QtAll.cpp',
+ 'generated_cpp_58/com_trolltech_qt_svg/com_trolltech_qt_svg_init.cpp',
  'generated_cpp_58/com_trolltech_qt_svg/com_trolltech_qt_svg0.cpp',
  'generated_cpp_58/PythonQt_QtBindings.cpp',
  'generated_cpp_58/com_trolltech_qt_opengl/com_trolltech_qt_opengl0.cpp',
@@ -142,6 +144,7 @@ lib_all_inc_d = include_directories(
 )
 
 lib_all_incs = [
+ 'extensions/PythonQt_QtAll/PythonQt_QtAll.h',
  'generated_cpp_58/com_trolltech_qt_svg/com_trolltech_qt_svg0.h',
  'generated_cpp_58/com_trolltech_qt_opengl/com_trolltech_qt_opengl0.h',
  'generated_cpp_58/com_trolltech_qt_xmlpatterns/com_trolltech_qt_xmlpatterns0.h',
@@ -179,6 +182,8 @@ lib_all_incs = [
 lib_all_moc_files = qt5.preprocess(moc_headers : lib_all_incs,
                            include_directories: [inc, lib_all_inc_d])
 
-library('pythonqt_all',[lib_all_srcs, lib_all_moc_files], dependencies : [qt5_dep, pythonqt])
+pythonqt_all = library('pythonqt_all',[lib_all_srcs, lib_all_moc_files], dependencies : [qt5_dep, pythonqt_dep])
+
+pythonqt_all_dep = declare_dependency(link_with:pythonqt_all, dependencies:[pythonqt_dep])
 
 subdir('generator')

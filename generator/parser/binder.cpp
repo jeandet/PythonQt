@@ -354,8 +354,13 @@ void Binder::visitFunctionDefinition(FunctionDefinitionAST *node)
   // node is generated in 'parser.cpp'
   while (declarator && declarator->sub_declarator)
       declarator = declarator->sub_declarator;
-  Q_ASSERT(declarator->id);
-
+  //Q_ASSERT(declarator->id);
+  if (!declarator->id) {
+    std::cerr << "** SHIT" << qPrintable(name_cc.name()) << std::endl
+      << "\tdefinition *ignored*"
+      << std::endl;
+    return;
+  }
   CodeModelFinder finder(model(), this);
 
   ScopeModelItem functionScope = finder.resolveScope(declarator->id, scope);
@@ -370,6 +375,13 @@ void Binder::visitFunctionDefinition(FunctionDefinitionAST *node)
     }
 
   decl_cc.run(declarator);
+  foreach (DeclaratorCompiler::Parameter p, decl_cc.parameters()) {
+    if (p.type.isRvalueReference()) {
+      std::cerr << "** Skipping function with rvalue reference parameter: "
+                << qPrintable(name_cc.name()) << std::endl;
+      return;
+    }
+  }
 
   Q_ASSERT(! decl_cc.id().isEmpty());
 
@@ -778,8 +790,12 @@ void Binder::visitQEnums(QEnumsAST *node)
                                               end.position - start.position).split(' ');
 
   ScopeModelItem scope = currentScope();
-  for (int i=0; i<enum_list.size(); ++i)
+  for (int i = 0; i < enum_list.size(); ++i) {
+    //if (node->isQEnum) {
+    //  std::cout << enum_list.at(i).toLatin1().constData() << std::endl;
+    //}
     scope->addEnumsDeclaration(enum_list.at(i));
+  }
 }
 
 void Binder::visitQProperty(QPropertyAST *node)

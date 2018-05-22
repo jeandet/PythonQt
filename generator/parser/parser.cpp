@@ -463,6 +463,9 @@ bool Parser::parseDeclaration(DeclarationAST *&node)
     case Token_Q_ENUMS:
         return parseQ_ENUMS(node);
 
+    case Token_Q_ENUM:
+      return parseQ_ENUM(node);
+
     case Token_template:
     case Token_export:
       return parseTemplateDeclaration(node);
@@ -1037,7 +1040,7 @@ bool Parser::parsePtrOperator(PtrOperatorAST *&node)
 {
   int tk = token_stream.lookAhead();
 
-  if (tk != '&' && tk != '*'
+  if (tk != '&' && tk != Token_and && tk != '*'
       && tk != Token_scope && tk != Token_identifier)
     {
       return false;
@@ -1051,6 +1054,7 @@ bool Parser::parsePtrOperator(PtrOperatorAST *&node)
     {
     case '&':
     case '*':
+    case Token_and:
       ast->op = token_stream.cursor();
       token_stream.nextToken();
       break;
@@ -1981,6 +1985,10 @@ bool Parser::parseMemberSpecification(DeclarationAST *&node)
     {
       return true;
     }
+  else if (parseQ_ENUM(node))
+  {
+    return true;
+  }
 
   token_stream.rewind((int) start);
 
@@ -4390,7 +4398,33 @@ bool Parser::parseQ_ENUMS(DeclarationAST *&node)
   }
   QEnumsAST *ast = CreateNode<QEnumsAST>(_M_pool);
   UPDATE_POS(ast, firstToken, token_stream.cursor());
+  ast->isQEnum = false;
   node = ast;
+
+  token_stream.nextToken();
+
+  return true;
+}
+
+bool Parser::parseQ_ENUM(DeclarationAST *&node)
+{
+  if (token_stream.lookAhead() != Token_Q_ENUM)
+    return false;
+
+  if (token_stream.lookAhead(1) != '(')
+    return false;
+
+  token_stream.nextToken();
+  token_stream.nextToken();
+
+  int firstToken = token_stream.cursor();
+  while (token_stream.lookAhead() != ')') {
+    token_stream.nextToken();
+  }
+  QEnumsAST *ast = CreateNode<QEnumsAST>(_M_pool);
+  UPDATE_POS(ast, firstToken, token_stream.cursor());
+  node = ast;
+  ast->isQEnum = true;
 
   token_stream.nextToken();
 
