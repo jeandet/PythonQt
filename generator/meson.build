@@ -44,6 +44,7 @@ moc_headers = files('generator.h', 'shellgenerator.h', 'setupgenerator.h', 'shel
 inc = include_directories('parser', 'parser/rpp')
 
 generated = qt5.preprocess(moc_headers : moc_headers,
-                           include_directories: inc)
+                           include_directories: inc,
+                            qresources  : 'generator.qrc')
 
 executable('pythonqt-generator', sources, generated, include_directories:inc, dependencies:[qt5_dep])
