@@ -184,6 +184,9 @@ lib_all_moc_files = qt5.preprocess(moc_headers : lib_all_incs,
 
 pythonqt_all = library('pythonqt_all',[lib_all_srcs, lib_all_moc_files], dependencies : [qt5_dep, pythonqt_dep])
 
-pythonqt_all_dep = declare_dependency(link_with:pythonqt_all, dependencies:[pythonqt_dep])
+pythonqt_all_dep = declare_dependency(link_with:pythonqt_all,
+	dependencies:[pythonqt_dep],
+	include_directories:include_directories('extensions/PythonQt_QtAll')
+	)
 
 subdir('generator')
