@@ -1,5 +1,7 @@
 project('pythonqt','cpp')
 
+pkg = import('pkgconfig')
+
 qt_dir=run_command('qmake-qt5', ['-query', 'QT_INSTALL_HEADERS']).stdout().split()[0]
 core_version=run_command('qmake-qt5', ['-query', 'QT_VERSION']).stdout().split()[0]
 
@@ -77,7 +79,43 @@ srcs = [
 ]
 
 pyqt = library('pythonqt',[srcs, moc_files],
-	include_directories:  inc, dependencies : [qt5_dep, python])
+	include_directories:  inc,
+	dependencies : [qt5_dep, python],
+	install: true)
+
+install_headers('src/PythonQtSystem.h',
+ 'src/gui/PythonQtScriptingConsole.h',
+ 'src/PythonQtSlot.h',
+ 'src/PythonQtStdOut.h',
+ 'src/PythonQtClassWrapper.h',
+ 'src/PythonQtQFileImporter.h',
+ 'src/PythonQtImporter.h',
+ 'src/PythonQtSignalReceiver.h',
+ 'src/PythonQtConversion.h',
+ 'src/PythonQtStdDecorators.h',
+ 'src/PythonQt.h',
+ 'src/PythonQtObjectPtr.h',
+ 'src/PythonQtStdIn.h',
+ 'src/PythonQtUtils.h',
+ 'src/PythonQtMisc.h',
+ 'src/PythonQtMethodInfo.h',
+ 'src/PythonQtImportFileInterface.h',
+ 'src/PythonQtSignal.h',
+ 'src/PythonQtCppWrapperFactory.h',
+ 'src/PythonQtVariants.h',
+ 'src/PythonQtInstanceWrapper.h',
+ 'src/PythonQtDoc.h',
+ 'src/PythonQtClassInfo.h',
+ 'src/PythonQtBoolResult.h',
+ 'src/PythonQtPythonInclude.h', subdir : 'PythonQt')
+
+pkg.generate(libraries : pyqt,
+             subdirs : 'PythonQt',
+             version : '0.1',
+             name : 'libpythonqt',
+             filebase : 'pythonqt',
+             description : 'pythonqt.')
+
 
 pythonqt_dep = declare_dependency(link_with:pyqt, dependencies:[python], include_directories:  inc)
 
@@ -182,11 +220,22 @@ lib_all_incs = [
 lib_all_moc_files = qt5.preprocess(moc_headers : lib_all_incs,
                            include_directories: [inc, lib_all_inc_d])
 
-pythonqt_all = library('pythonqt_all',[lib_all_srcs, lib_all_moc_files], dependencies : [qt5_dep, pythonqt_dep])
+pythonqt_all = library('pythonqt_all',[lib_all_srcs, lib_all_moc_files],
+	dependencies : [qt5_dep, pythonqt_dep],
+	install: true)
 
 pythonqt_all_dep = declare_dependency(link_with:pythonqt_all,
 	dependencies:[pythonqt_dep],
 	include_directories:include_directories('extensions/PythonQt_QtAll')
 	)
+
+install_headers( 'extensions/PythonQt_QtAll/PythonQt_QtAll.h', subdir : 'PythonQt/PythonQt_QtAll')
+
+pkg.generate(libraries : pythonqt_all,
+             subdirs : 'PythonQt/PythonQt_QtAll',
+             version : '0.1',
+             name : 'libpythonqt_all',
+             filebase : 'pythonqt_all',
+             description : 'pythonqt_all.')
 
 subdir('generator')
