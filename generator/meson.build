@@ -1,0 +1,49 @@
+sources = files('./abstractmetalang.cpp',
+ './typeparser.cpp',
+ './metaqtscriptbuilder.cpp',
+ './setupgenerator.cpp',
+ './parser/list.cpp',
+ './parser/compiler_utils.cpp',
+ './parser/default_visitor.cpp',
+ './parser/visitor.cpp',
+ './parser/rpp/preprocessor.cpp',
+ './parser/rpp/builtin-macros.cpp',
+ './parser/binder.cpp',
+ './parser/declarator_compiler.cpp',
+ './parser/tokens.cpp',
+ './parser/lexer.cpp',
+ './parser/dumptree.cpp',
+ './parser/name_compiler.cpp',
+ './parser/parser.cpp',
+ './parser/codemodel_finder.cpp',
+ './parser/control.cpp',
+ './parser/type_compiler.cpp',
+ './parser/codemodel.cpp',
+ './parser/smallobject.cpp',
+ './parser/class_compiler.cpp',
+ './parser/ast.cpp',
+ './main.cpp',
+ './asttoxml.cpp',
+ './fileout.cpp',
+ './abstractmetabuilder.cpp',
+ './generatorset.cpp',
+ './typesystem.cpp',
+ './metajava.cpp',
+ './prigenerator.cpp',
+ './shellimplgenerator.cpp',
+ './metaqtscript.cpp',
+ './generator.cpp',
+ './shellheadergenerator.cpp',
+ './customtypes.cpp',
+ './shellgenerator.cpp',
+ './reporthandler.cpp',
+ './generatorsetqtscript.cpp')
+
+moc_headers = files('generator.h', 'shellgenerator.h', 'setupgenerator.h', 'shellheadergenerator.h', 'generatorsetqtscript.h', 'shellimplgenerator.h', 'prigenerator.h', 'fileout.h', 'generatorset.h')
+
+inc = include_directories('parser', 'parser/rpp')
+
+generated = qt5.preprocess(moc_headers : moc_headers,
+                           include_directories: inc)
+
+executable('pythonqt-generator', sources, generated, include_directories:inc, dependencies:[qt5_dep])
