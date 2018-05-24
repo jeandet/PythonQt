@@ -53,7 +53,7 @@ endif()
 # Python libraries
 
 find_package(PythonLibs REQUIRED)
-include_directories("${PYTHON_INCLUDE_DIR}")
+
 add_definitions(
   -DPYTHONQT_USE_RELEASE_PYTHON_FALLBACK
   -DPYTHONQT_SUPPORT_NAME_PROPERTY
@@ -271,6 +271,8 @@ foreach(qtlib ${qtlibs})
 
     ADD_DEFINITIONS(-DPYTHONQT_WRAP_Qt${qt_wrapped_lib})
 
+    list(APPEND sources extensions/PythonQt_QtAll/PythonQt_QtAll.cpp)
+
     set(file_prefix generated_cpp${generated_cpp_suffix}/com_trolltech_qt_${qt_wrapped_lib}/com_trolltech_qt_${qt_wrapped_lib})
 
     foreach(index RANGE 0 12)
@@ -299,15 +301,27 @@ pythonqt_wrap_cpp(gen_moc_sources ${moc_sources})
 #-----------------------------------------------------------------------------
 # Build the library
 
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src
-  )
 
 add_library(PythonQt SHARED
             ${sources}
             ${gen_moc_sources}
   )
 set_target_properties(PythonQt PROPERTIES DEFINE_SYMBOL PYTHONQT_EXPORTS)
+
+target_include_directories(PythonQt PUBLIC
+    $<BUILD_INTERFACE:${PYTHON_INCLUDE_DIR}>
+)
+
+target_include_directories(PythonQt PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+)
+
+if(PythonQt_Wrap_QtAll)
+    target_include_directories(PythonQt PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extensions/PythonQt_QtAll>
+    )
+endif()
+
 
 target_compile_options(PythonQt PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
